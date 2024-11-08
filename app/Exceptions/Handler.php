@@ -5,6 +5,9 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -14,12 +17,22 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        \Illuminate\Auth\AuthenticationException::class,
+        AuthenticationException::class,
         \Illuminate\Auth\Access\AuthorizationException::class,
-        \Symfony\Component\HttpKernel\Exception\HttpException::class,
+        NotFoundHttpException::class,
         \Illuminate\Database\Eloquent\ModelNotFoundException::class,
         \Illuminate\Session\TokenMismatchException::class,
         \Illuminate\Validation\ValidationException::class,
+    ];
+
+    /**
+     * A list of the inputs that are never included in the exception's report.
+     *
+     * @var array
+     */
+    protected $dontFlash = [
+        'password',
+        'password_confirmation',
     ];
 
     /**
@@ -32,6 +45,11 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
+        // You can add custom logging here if necessary, for example:
+        if ($this->shouldReport($exception)) {
+            Log::error('Exception reported: ' . $exception->getMessage());
+        }
+
         parent::report($exception);
     }
 
@@ -44,6 +62,11 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        // Custom handling for different exception types can be done here
+        if ($exception instanceof NotFoundHttpException) {
+            return response()->view('errors.404', [], 404);
+        }
+
         return parent::render($request, $exception);
     }
 
@@ -57,9 +80,9 @@ class Handler extends ExceptionHandler
     protected function unauthenticated($request, AuthenticationException $exception)
     {
         if ($request->expectsJson()) {
-            return response()->json(['error' => 'Unauthenticated.'], 401);
+            return response()->json(['message' => 'Unauthenticated.'], 401);
         }
 
-        return redirect()->guest('login');
+        return redirect()->route('login');
     }
 }
