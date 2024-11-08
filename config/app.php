@@ -180,10 +180,6 @@ return [
          * Package Service Providers...
          */
 
-        Intervention\Image\ImageServiceProvider::class,
-        Collective\Html\HtmlServiceProvider::class,
-        Laravel\Socialite\SocialiteServiceProvider::class,
-
         /*
          * Application Service Providers...
          */
@@ -242,10 +238,6 @@ return [
         /*
          * Package Aliases
          */
-        'Image'        => Intervention\Image\Facades\Image::class,
-        'Form'         => Collective\Html\FormFacade::class,
-        'Html'         => Collective\Html\HtmlFacade::class,
-        'Socialite'    => Laravel\Socialite\Facades\Socialite::class,
 
     ],
 
