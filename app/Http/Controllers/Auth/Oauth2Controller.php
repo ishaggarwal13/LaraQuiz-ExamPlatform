@@ -10,61 +10,93 @@ use App\Http\Controllers\Controller;
 
 class Oauth2Controller extends Controller
 {
+    /**
+     * Redirect to Google authentication page.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function oauth2google()
     {
         return Socialite::driver('google')->redirect();
     }
 
+    /**
+     * Handle the callback from Google.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function googlecallback()
     {
-        $this->handleuser('google');
-
-        return redirect('/');
+        return $this->handleUser('google');
     }
 
+    /**
+     * Redirect to Facebook authentication page.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function oauth2facebook()
     {
         return Socialite::driver('facebook')->redirect();
     }
 
+    /**
+     * Handle the callback from Facebook.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function facebookcallback()
     {
-        $this->handleuser('facebook');
-
-        return redirect('/');
+        return $this->handleUser('facebook');
     }
 
+    /**
+     * Redirect to GitHub authentication page.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function oauth2github()
     {
         return Socialite::driver('github')->redirect();
     }
 
+    /**
+     * Handle the callback from GitHub.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function githubcallback()
     {
-        $this->handleuser('github');
+        return $this->handleUser('github');
+    }
+
+    /**
+     * Handle the user after authentication.
+     *
+     * @param string $provider
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    private function handleUser($provider)
+    {
+        // Get the authenticated user details from the provider.
+        $socialUser = Socialite::driver($provider)->user();
+
+        // Prepare data to be stored or updated
+        $data = [
+            'name'  => $socialUser->getName() ?: '',
+            'email' => $socialUser->getEmail(),
+        ];
+
+        // Find or create the user based on the email
+        $user = User::firstOrCreate(
+            ['email' => $socialUser->getEmail()],
+            $data
+        );
+
+        // Log the user in
+        Auth::login($user);
 
         return redirect('/');
     }
-
-    private static function handleuser($provider)
-    {
-        $social_user = Socialite::driver($provider)->user();
-
-        $data = [
-            'name' => $social_user->getName(),
-            'email' => $social_user->getEmail()
-        ];
-
-        if (!($data['name']) || is_null($data['name'])) {
-            $data['name'] = '';
-        }
-
-        $user = User::where('email', '=', $social_user->getEmail())->first();
-
-        if ($user === null) {
-            Auth::login(User::firstOrCreate($data));
-        } else {
-            Auth::login($user);
-        }
-    }
 }
+

@@ -238,6 +238,7 @@ return [
         /*
          * Package Aliases
          */
+        'Html' => Spatie\Html\Facades\Html::class,
 
     ],
 

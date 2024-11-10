@@ -3,37 +3,43 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
-
-    use AuthenticatesUsers;
-
-    /**
-     * Where to redirect users after login / registration.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/home';
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    // Show the login form
+    public function showLoginForm()
     {
-        $this->middleware('guest', ['except' => 'logout']);
+        return view('auth.login');
+    }
+
+    // Handle the login request
+    public function login(Request $request)
+    {
+        // Validate the request
+        $validated = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|min:6',
+        ]);
+
+        // Attempt to log the user in
+        if (Auth::attempt($validated)) {
+            // Redirect to the intended route (default is /home)
+            return redirect()->intended('/home');
+        }
+
+        // If login fails, redirect back with an error message
+        return back()->withErrors(['email' => 'Invalid credentials'])->withInput();
+    }
+
+    // Handle the logout request
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login');
     }
 }
