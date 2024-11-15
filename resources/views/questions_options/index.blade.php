@@ -25,23 +25,27 @@
                 </thead>
                 
                 <tbody>
-                    @if (count($questions_options) > 0)
+                    @if ($questions_options->isNotEmpty())
                         @foreach ($questions_options as $questions_option)
                             <tr data-entry-id="{{ $questions_option->id }}">
                                 <td></td>
-                                <td>{{ $questions_option->question->question_text or '' }}</td>
+                                <td>{{ $questions_option->question->question_text ?? '' }}</td>
                                 <td>{{ $questions_option->option }}</td>
-                                <td>{{ $questions_option->correct == 1 ? 'Yes' : 'No' }}</td>
+                                <td>{{ $questions_option->correct ? 'Yes' : 'No' }}</td>
                                 <td>
-                                    <a href="{{ route('questions_options.show',[$questions_option->id]) }}" class="btn btn-xs btn-primary">@lang('quickadmin.view')</a>
-                                    <a href="{{ route('questions_options.edit',[$questions_option->id]) }}" class="btn btn-xs btn-info">@lang('quickadmin.edit')</a>
-                                    {!! Form::open(array(
-                                        'style' => 'display: inline-block;',
-                                        'method' => 'DELETE',
-                                        'onsubmit' => "return confirm('".trans("quickadmin.are_you_sure")."');",
-                                        'route' => ['questions_options.destroy', $questions_option->id])) !!}
-                                    {!! Form::submit(trans('quickadmin.delete'), array('class' => 'btn btn-xs btn-danger')) !!}
-                                    {!! Form::close() !!}
+                                    <a href="{{ route('questions_options.show', $questions_option->id) }}" class="btn btn-xs btn-primary">@lang('quickadmin.view')</a>
+                                    <a href="{{ route('questions_options.edit', $questions_option->id) }}" class="btn btn-xs btn-info">@lang('quickadmin.edit')</a>
+                                    
+                                    <!-- Replace the form with standard HTML -->
+                                    <form 
+                                        style="display: inline-block;" 
+                                        method="POST" 
+                                        action="{{ route('questions_options.destroy', $questions_option->id) }}" 
+                                        onsubmit="return confirm('{{ trans('quickadmin.are_you_sure') }}');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-xs btn-danger">@lang('quickadmin.delete')</button>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach

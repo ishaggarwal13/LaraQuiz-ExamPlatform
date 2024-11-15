@@ -12,8 +12,10 @@
             <div class="row">
                 <div class="col-md-6">
                     <table class="table table-bordered table-striped">
-                        <tr><th>@lang('quickadmin.topics.fields.title')</th>
-                    <td>{{ $topic->title }}</td></tr>
+                        <tr>
+                            <th>@lang('quickadmin.topics.fields.title')</th>
+                            <td>{{ $topic->title }}</td>
+                        </tr>
                     </table>
                 </div>
             </div>

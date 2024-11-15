@@ -12,34 +12,34 @@
             <table class="table table-bordered table-striped {{ count($results) > 0 ? 'datatable' : '' }}">
                 <thead>
                     <tr>
-                    @if(Auth::user()->isAdmin())
-                        <th>@lang('quickadmin.results.fields.user')</th>
-                    @endif
+                        @if(Auth::user()->isAdmin())
+                            <th>@lang('quickadmin.results.fields.user')</th>
+                        @endif
                         <th>@lang('quickadmin.results.fields.date')</th>
-                        <th>Result</th>
+                        <th>@lang('quickadmin.results.fields.result')</th>
                         <th>&nbsp;</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    @if (count($results) > 0)
-                        @foreach ($results as $result)
-                            <tr>
-                            @if(Auth::user()->isAdmin())
-                                <td>{{ $result->user->name or '' }} ({{ $result->user->email or '' }})</td>
-                            @endif
-                                <td>{{ $result->created_at or '' }}</td>
-                                <td>{{ $result->result }}/10</td>
-                                <td>
-                                    <a href="{{ route('results.show',[$result->id]) }}" class="btn btn-xs btn-primary">@lang('quickadmin.view')</a>
-                                </td>
-                            </tr>
-                        @endforeach
-                    @else
+                    @forelse ($results as $result)
                         <tr>
-                            <td colspan="6">@lang('quickadmin.no_entries_in_table')</td>
+                            @if(Auth::user()->isAdmin())
+                                <td>{{ $result->user->name ?? '' }} ({{ $result->user->email ?? '' }})</td>
+                            @endif
+                            <td>{{ $result->created_at ?? '' }}</td>
+                            <td>{{ $result->result }}/10</td>
+                            <td>
+                                <a href="{{ route('results.show', $result->id) }}" class="btn btn-xs btn-primary">@lang('quickadmin.view')</a>
+                            </td>
                         </tr>
-                    @endif
+                    @empty
+                        <tr>
+                            <td colspan="{{ Auth::user()->isAdmin() ? '4' : '3' }}">
+                                @lang('quickadmin.no_entries_in_table')
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

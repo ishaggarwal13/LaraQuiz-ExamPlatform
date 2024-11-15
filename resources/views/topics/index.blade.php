@@ -16,7 +16,9 @@
             <table class="table table-bordered table-striped {{ count($topics) > 0 ? 'datatable' : '' }} dt-select">
                 <thead>
                     <tr>
-                        <th style="text-align:center;"><input type="checkbox" id="select-all" /></th>
+                        <th style="text-align:center;">
+                            <input type="checkbox" id="select-all">
+                        </th>
                         <th>@lang('quickadmin.topics.fields.title')</th>
                         <th>&nbsp;</th>
                     </tr>
@@ -29,15 +31,15 @@
                                 <td></td>
                                 <td>{{ $topic->title }}</td>
                                 <td>
-                                    <a href="{{ route('topics.show',[$topic->id]) }}" class="btn btn-xs btn-primary">@lang('quickadmin.view')</a>
-                                    <a href="{{ route('topics.edit',[$topic->id]) }}" class="btn btn-xs btn-info">@lang('quickadmin.edit')</a>
-                                    {!! Form::open(array(
-                                        'style' => 'display: inline-block;',
-                                        'method' => 'DELETE',
-                                        'onsubmit' => "return confirm('".trans("quickadmin.are_you_sure")."');",
-                                        'route' => ['topics.destroy', $topic->id])) !!}
-                                    {!! Form::submit(trans('quickadmin.delete'), array('class' => 'btn btn-xs btn-danger')) !!}
-                                    {!! Form::close() !!}
+                                    <a href="{{ route('topics.show', [$topic->id]) }}" class="btn btn-xs btn-primary">@lang('quickadmin.view')</a>
+                                    <a href="{{ route('topics.edit', [$topic->id]) }}" class="btn btn-xs btn-info">@lang('quickadmin.edit')</a>
+
+                                    <!-- Delete Form -->
+                                    <form action="{{ route('topics.destroy', [$topic->id]) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('{{ trans('quickadmin.are_you_sure') }}');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-xs btn-danger">@lang('quickadmin.delete')</button>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach

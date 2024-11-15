@@ -4,7 +4,8 @@
     <h3 class="page-title">@lang('quickadmin.questions.title')</h3>
 
     <p>
-        <a href="{{ route('questions.create') }}" class="btn btn-success">@lang('quickadmin.add_new')</a>
+        {{-- Create New Question Button --}}
+        <a href="{{ route('questions.create') }}" class="btn btn-success">{{ trans('quickadmin.add_new') }}</a>
     </p>
 
     <div class="panel panel-default">
@@ -22,30 +23,31 @@
                         <th>&nbsp;</th>
                     </tr>
                 </thead>
-                
+
                 <tbody>
                     @if (count($questions) > 0)
                         @foreach ($questions as $question)
                             <tr data-entry-id="{{ $question->id }}">
                                 <td></td>
-                                <td>{{ $question->topic->title or '' }}</td>
+                                <td>{{ $question->topic->title ?? '' }}</td>
                                 <td>{!! $question->question_text !!}</td>
                                 <td>
-                                    <a href="{{ route('questions.show',[$question->id]) }}" class="btn btn-xs btn-primary">@lang('quickadmin.view')</a>
-                                    <a href="{{ route('questions.edit',[$question->id]) }}" class="btn btn-xs btn-info">@lang('quickadmin.edit')</a>
-                                    {!! Form::open(array(
-                                        'style' => 'display: inline-block;',
-                                        'method' => 'DELETE',
-                                        'onsubmit' => "return confirm('".trans("quickadmin.are_you_sure")."');",
-                                        'route' => ['questions.destroy', $question->id])) !!}
-                                    {!! Form::submit(trans('quickadmin.delete'), array('class' => 'btn btn-xs btn-danger')) !!}
-                                    {!! Form::close() !!}
+                                    {{-- View Button --}}
+                                    <a href="{{ route('questions.show', $question->id) }}" class="btn btn-xs btn-primary">{{ trans('quickadmin.view') }}</a>
+                                    {{-- Edit Button --}}
+                                    <a href="{{ route('questions.edit', $question->id) }}" class="btn btn-xs btn-info">{{ trans('quickadmin.edit') }}</a>
+                                    {{-- Delete Form --}}
+                                    <form action="{{ route('questions.destroy', $question->id) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('{{ trans('quickadmin.are_you_sure') }}');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-xs btn-danger">{{ trans('quickadmin.delete') }}</button>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach
                     @else
                         <tr>
-                            <td colspan="7">@lang('quickadmin.no_entries_in_table')</td>
+                            <td colspan="4">@lang('quickadmin.no_entries_in_table')</td>
                         </tr>
                     @endif
                 </tbody>

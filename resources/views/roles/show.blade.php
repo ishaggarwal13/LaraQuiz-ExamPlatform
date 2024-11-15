@@ -2,7 +2,7 @@
 
 @section('content')
     <h3 class="page-title">@lang('quickadmin.roles.title')</h3>
-    
+
     <div class="panel panel-default">
         <div class="panel-heading">
             @lang('quickadmin.view')
@@ -12,8 +12,10 @@
             <div class="row">
                 <div class="col-md-6">
                     <table class="table table-bordered table-striped">
-                        <tr><th>@lang('quickadmin.roles.fields.title')</th>
-                    <td>{{ $role->title }}</td></tr>
+                        <tr>
+                            <th>@lang('quickadmin.roles.fields.title')</th>
+                            <td>{{ $role->title }}</td>
+                        </tr>
                     </table>
                 </div>
             </div>

@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\Oauth2Controller;
@@ -23,12 +24,6 @@ Route::get('/', function () {
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('auth.login');
 Route::post('login', [LoginController::class, 'login'])->name('auth.login');
 Route::post('logout', [LoginController::class, 'logout'])->name('auth.logout');
-Route::get('oauth2google', [Oauth2Controller::class, 'oauth2google'])->name('oauth2google');
-Route::get('googlecallback', [Oauth2Controller::class, 'googlecallback'])->name('googlecallback');
-Route::get('oauth2facebook', [Oauth2Controller::class, 'oauth2facebook'])->name('oauth2facebook');
-Route::get('facebookcallback', [Oauth2Controller::class, 'facebookcallback'])->name('facebookcallback');
-Route::get('oauth2github', [Oauth2Controller::class, 'oauth2github'])->name('oauth2github');
-Route::get('githubcallback', [Oauth2Controller::class, 'githubcallback'])->name('githubcallback');
 
 // Registration Routes...
 Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('auth.register');
@@ -42,7 +37,7 @@ Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('
 
 // Routes for authenticated users...
 Route::middleware(['auth'])->group(function () {
-    Route::get('/home', [HomeController::class, 'index']);
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
     
     Route::resource('tests', TestsController::class);
     Route::resource('roles', RolesController::class);

@@ -2,80 +2,83 @@
 
 @section('content')
     <h3 class="page-title">@lang('quickadmin.questions.title')</h3>
-    
-    {!! Form::model($question, ['method' => 'PUT', 'route' => ['questions.update', $question->id]]) !!}
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            @lang('quickadmin.edit')
+    {{-- Form using Blade's native form components --}}
+    <form method="POST" action="{{ route('questions.update', $question->id) }}">
+        @csrf
+        @method('PUT')
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                @lang('quickadmin.edit')
+            </div>
+
+            <div class="panel-body">
+                {{-- Topic Field --}}
+                <div class="row">
+                    <div class="col-xs-12 form-group">
+                        <label for="topic_id" class="control-label">@lang('quickadmin.questions.fields.topic')</label>
+                        <select name="topic_id" id="topic_id" class="form-control">
+                            <option value="">@lang('quickadmin.select_topic')</option>
+                            @foreach($topics as $key => $value)
+                                <option value="{{ $key }}" {{ old('topic_id', $question->topic_id) == $key ? 'selected' : '' }}>
+                                    {{ $value }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('topic_id')
+                            <p class="help-block">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                {{-- Question Text Field --}}
+                <div class="row">
+                    <div class="col-xs-12 form-group">
+                        <label for="question_text" class="control-label">@lang('quickadmin.questions.fields.question-text')</label>
+                        <textarea name="question_text" id="question_text" class="form-control" placeholder="">{{ old('question_text', $question->question_text) }}</textarea>
+                        @error('question_text')
+                            <p class="help-block">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                {{-- Code Snippet Field --}}
+                <div class="row">
+                    <div class="col-xs-12 form-group">
+                        <label for="code_snippet" class="control-label">@lang('quickadmin.questions.fields.code-snippet')</label>
+                        <textarea name="code_snippet" id="code_snippet" class="form-control" placeholder="">{{ old('code_snippet', $question->code_snippet) }}</textarea>
+                        @error('code_snippet')
+                            <p class="help-block">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                {{-- Answer Explanation Field --}}
+                <div class="row">
+                    <div class="col-xs-12 form-group">
+                        <label for="answer_explanation" class="control-label">@lang('quickadmin.questions.fields.answer-explanation')</label>
+                        <textarea name="answer_explanation" id="answer_explanation" class="form-control" placeholder="">{{ old('answer_explanation', $question->answer_explanation) }}</textarea>
+                        @error('answer_explanation')
+                            <p class="help-block">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                {{-- More Info Link Field --}}
+                <div class="row">
+                    <div class="col-xs-12 form-group">
+                        <label for="more_info_link" class="control-label">@lang('quickadmin.questions.fields.more-info-link')</label>
+                        <input type="text" name="more_info_link" id="more_info_link" class="form-control" placeholder="" value="{{ old('more_info_link', $question->more_info_link) }}">
+                        @error('more_info_link')
+                            <p class="help-block">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-xs-12 form-group">
-                    {!! Form::label('topic_id', 'Topic*', ['class' => 'control-label']) !!}
-                    {!! Form::select('topic_id', $topics, old('topic_id'), ['class' => 'form-control']) !!}
-                    <p class="help-block"></p>
-                    @if($errors->has('topic_id'))
-                        <p class="help-block">
-                            {{ $errors->first('topic_id') }}
-                        </p>
-                    @endif
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-12 form-group">
-                    {!! Form::label('question_text', 'Question text*', ['class' => 'control-label']) !!}
-                    {!! Form::textarea('question_text', old('question_text'), ['class' => 'form-control ', 'placeholder' => '']) !!}
-                    <p class="help-block"></p>
-                    @if($errors->has('question_text'))
-                        <p class="help-block">
-                            {{ $errors->first('question_text') }}
-                        </p>
-                    @endif
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-12 form-group">
-                    {!! Form::label('code_snippet', 'Code snippet', ['class' => 'control-label']) !!}
-                    {!! Form::textarea('code_snippet', old('code_snippet'), ['class' => 'form-control ', 'placeholder' => '']) !!}
-                    <p class="help-block"></p>
-                    @if($errors->has('code_snippet'))
-                        <p class="help-block">
-                            {{ $errors->first('code_snippet') }}
-                        </p>
-                    @endif
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-12 form-group">
-                    {!! Form::label('answer_explanation', 'Answer explanation*', ['class' => 'control-label']) !!}
-                    {!! Form::textarea('answer_explanation', old('answer_explanation'), ['class' => 'form-control ', 'placeholder' => '']) !!}
-                    <p class="help-block"></p>
-                    @if($errors->has('answer_explanation'))
-                        <p class="help-block">
-                            {{ $errors->first('answer_explanation') }}
-                        </p>
-                    @endif
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-12 form-group">
-                    {!! Form::label('more_info_link', 'More info link', ['class' => 'control-label']) !!}
-                    {!! Form::text('more_info_link', old('more_info_link'), ['class' => 'form-control', 'placeholder' => '']) !!}
-                    <p class="help-block"></p>
-                    @if($errors->has('more_info_link'))
-                        <p class="help-block">
-                            {{ $errors->first('more_info_link') }}
-                        </p>
-                    @endif
-                </div>
-            </div>
-            
-        </div>
-    </div>
-
-    {!! Form::submit(trans('quickadmin.update'), ['class' => 'btn btn-danger']) !!}
-    {!! Form::close() !!}
+        {{-- Submit Button --}}
+        <button type="submit" class="btn btn-danger">@lang('quickadmin.update')</button>
+    </form>
 @stop
-

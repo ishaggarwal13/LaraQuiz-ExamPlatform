@@ -2,32 +2,40 @@
 
 @section('content')
     <div class="row">
-        <div class="col-md-10">
-            <div class="panel panel-default">
-                <div class="panel-heading">Welcome! Here are some numbers about LaraQuiz.</div>
+        <div class="col-md-10 mx-auto">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    Welcome! Here are some statistics about LaraQuiz.
+                </div>
 
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-3 text-center">
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3">
                             <h1>{{ $questions }}</h1>
-                            questions in our database
+                            <p>questions in our database</p>
                         </div>
-                        <div class="col-md-3 text-center">
+                        <div class="col-md-3">
                             <h1>{{ $users }}</h1>
-                            users registered
+                            <p>users registered</p>
                         </div>
-                        <div class="col-md-3 text-center">
+                        <div class="col-md-3">
                             <h1>{{ $quizzes }}</h1>
-                            quizzes taken
+                            <p>quizzes taken</p>
                         </div>
-                        <div class="col-md-3 text-center">
+                        <div class="col-md-3">
                             <h1>{{ number_format($average, 2) }} / 10</h1>
-                            average score
+                            <p>average score</p>
                         </div>
                     </div>
                 </div>
             </div>
-            <a href="{{ route('tests.index') }}" class="btn btn-success">Take a new quiz!</a>
+
+            <!-- Take a quiz button -->
+            <div class="mt-4 text-center">
+                <a href="{{ route('tests.index') }}" class="btn btn-success">
+                    Take a new quiz!
+                </a>
+            </div>
         </div>
     </div>
 @endsection

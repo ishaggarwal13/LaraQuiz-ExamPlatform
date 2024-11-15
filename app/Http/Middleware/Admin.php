@@ -10,10 +10,16 @@ class Admin
 {
     public function handle($request, Closure $next, $guard = null)
     {
-        if (!Auth::user()->isAdmin()) {
-            return redirect()->back();
+        // Ensure the user is authenticated
+        if (!Auth::check() || !Auth::user()->isAdmin()) {
+            return redirect()->back(); // Or redirect to another route, like '/login'
         }
 
         return $next($request);
     }
 }
+
+
+
+
+

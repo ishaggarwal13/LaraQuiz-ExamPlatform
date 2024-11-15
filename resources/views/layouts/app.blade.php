@@ -9,60 +9,65 @@
 
     @include('partials.analytics')
 
-    <div class="page-header navbar navbar-fixed-top">
+    <!-- Header -->
+    <header class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         @include('partials.header')
-    </div>
+    </header>
 
     <div class="clearfix"></div>
 
-    <div class="page-container">
-        <div class="page-sidebar-wrapper">
+    <!-- Main Container -->
+    <div class="page-container d-flex">
+        <!-- Sidebar -->
+        <aside class="page-sidebar-wrapper bg-light">
             @include('partials.sidebar')
-        </div>
+        </aside>
 
-        <div class="page-content-wrapper">
-            <div class="page-content">
-
+        <!-- Content -->
+        <main class="page-content-wrapper flex-grow-1">
+            <div class="container-fluid page-content py-4">
+                <!-- Page Title -->
                 @if(isset($siteTitle))
-                    <h3 class="page-title">
-                        {{ $siteTitle }}
-                    </h3>
+                    <h3 class="page-title">{{ $siteTitle }}</h3>
                 @endif
 
-                <div class="row">
-                    <div class="col-md-12">
-
-                        @if (Session::has('message'))
-                            <div class="note note-info">
-                                <p>{{ Session::get('message') }}</p>
-                            </div>
-                        @endif
-                        @if ($errors->count() > 0)
-                            <div class="note note-danger">
-                                <ul class="list-unstyled">
-                                    @foreach($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
-
-                        @yield('content')
-
+                <!-- Flash Messages -->
+                @if (session('message'))
+                    <div class="alert alert-info">
+                        <p>{{ session('message') }}</p>
                     </div>
-                </div>
+                @endif
+
+                <!-- Validation Errors -->
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <!-- Dynamic Content -->
+                @yield('content')
             </div>
-        </div>
+        </main>
     </div>
 
-    <div class="scroll-to-top"
-         style="display: none;">
+    <!-- Scroll to Top -->
+    <button class="scroll-to-top btn btn-primary" style="display: none;">
         <i class="fa fa-arrow-up"></i>
-    </div>
+    </button>
 
-    {!! Form::open(['route' => 'auth.logout', 'style' => 'display:none;', 'id' => 'logout']) !!}
-        <button type="submit">Logout</button>
-    {!! Form::close() !!}
+    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+    {{ __('Logout') }}
+</a>
+
+<form id="logout-form" action="{{ route('auth.logout') }}" method="POST" style="display: none;">
+    @csrf
+</form>
+
 
     @include('partials.javascripts')
 </body>
